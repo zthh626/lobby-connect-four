@@ -1,4 +1,4 @@
-import { VStack, Heading, HStack, useDisclosure, Box } from "@chakra-ui/react";
+import { VStack, Heading, HStack, useDisclosure } from "@chakra-ui/react";
 import React, { Fragment, useEffect, useState } from "react";
 import Player from "../../types/Player";
 import WinModal from "../modals/WinModal";
@@ -6,16 +6,16 @@ import GridItem from "./components/GridItem";
 
 interface BoardProps {
   size: number;
-  toggleIsPlaying: () => void;
 }
 
-function Board({ size, toggleIsPlaying }: BoardProps) {
+function Board({ size }: BoardProps) {
   const [currentPlayer, setCurrentPlayer] = useState<Player>("Player One");
   const [board, setBoard] = useState<Player[][]>(
     new Array(size + 1).fill(null).map(() => new Array(size).fill(null))
   );
   const [currentColHovering, setCurrentColHovering] = useState(0);
   const [winner, setWinner] = useState<Player>(null);
+  const [stalemate, setStalemate] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const gridClickHandler = (colIndex: number) => {
@@ -34,13 +34,12 @@ function Board({ size, toggleIsPlaying }: BoardProps) {
   };
 
   const handleOnCloseWinModal = () => {
-    setCurrentPlayer("Player One");
     setBoard(
       new Array(size + 1).fill(null).map(() => new Array(size).fill(null))
     );
     setWinner(null);
+    setStalemate(false);
     onClose();
-    toggleIsPlaying();
   };
 
   const handleSetCurrentColHovering = (colIndex: number) => {
@@ -113,9 +112,27 @@ function Board({ size, toggleIsPlaying }: BoardProps) {
     return winner;
   };
 
+  const checkStalemate = (): Boolean => {
+    var isStalemate = true;
+    for (let i = size; i > 0; i--) {
+      for (let j = 0; j < size; j++) {
+        if (board[i][j] === null) {
+          isStalemate = false;
+        }
+      }
+    }
+
+    return isStalemate;
+  };
+
   useEffect(() => {
     const playerOneWin: Player = checkForWinner("Player One");
     const playerTwoWin: Player = checkForWinner("Player Two");
+
+    if (checkStalemate()) {
+      setStalemate(true);
+      onOpen();
+    }
 
     if (playerOneWin) {
       setWinner("Player One");
@@ -132,6 +149,7 @@ function Board({ size, toggleIsPlaying }: BoardProps) {
         isOpen={isOpen}
         onClose={handleOnCloseWinModal}
         winner={winner}
+        stalemate={stalemate}
       />
       <HStack w="100%">
         <Heading size="sm" p="0.5em" w="100%">
