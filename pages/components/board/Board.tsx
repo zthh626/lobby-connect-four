@@ -1,7 +1,8 @@
 import { VStack, Heading, HStack, useDisclosure } from "@chakra-ui/react";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import Player from "../../types/Player";
 import WinModal from "../modals/WinModal";
+import SelectionOverlay from "../Overlays/SelectionOverlay";
 import GridItem from "./components/GridItem";
 
 interface BoardProps {
@@ -10,6 +11,7 @@ interface BoardProps {
 
 function Board({ size }: BoardProps) {
   const [currentPlayer, setCurrentPlayer] = useState<Player>("Player One");
+  const [playerOneColor, setPlayerOneColor] = useState<string>("red");
   const [board, setBoard] = useState<Player[][]>(
     new Array(size + 1).fill(null).map(() => new Array(size).fill(null))
   );
@@ -17,6 +19,13 @@ function Board({ size }: BoardProps) {
   const [winner, setWinner] = useState<Player>(null);
   const [stalemate, setStalemate] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [showOverlay, setShowOverlay] = useState(true);
+
+  const toggleCurrentPlayer = () => {
+    setCurrentPlayer((prev) => {
+      return prev === "Player One" ? "Player Two" : "Player One";
+    });
+  };
 
   const gridClickHandler = (colIndex: number) => {
     const newBoard = board.slice();
@@ -27,9 +36,7 @@ function Board({ size }: BoardProps) {
         break;
       }
     }
-    setCurrentPlayer((prev) => {
-      return prev === "Player One" ? "Player Two" : "Player One";
-    });
+    toggleCurrentPlayer();
     setBoard(newBoard);
   };
 
@@ -44,6 +51,14 @@ function Board({ size }: BoardProps) {
 
   const handleSetCurrentColHovering = (colIndex: number) => {
     setCurrentColHovering(colIndex);
+  };
+
+  const closeOverlay = () => {
+    setShowOverlay(false);
+  };
+
+  const setPlayerOneColorYellow = () => {
+    setPlayerOneColor("yellow.300");
   };
 
   const checkForWinner = (player: Player): Player => {
@@ -144,45 +159,56 @@ function Board({ size }: BoardProps) {
   }, [board]);
 
   return (
-    <VStack w="100%">
-      <WinModal
-        isOpen={isOpen}
-        onClose={handleOnCloseWinModal}
-        winner={winner}
-        stalemate={stalemate}
-      />
-      <HStack w="100%">
-        <Heading size="sm" p="0.5em" w="100%">
-          Connect Four
-        </Heading>
-        <Heading size="md" textAlign="end" p="0.5em" w="100%">
-          {currentPlayer}'s Turn
-        </Heading>
-      </HStack>
-      <VStack p="1em" h="100%" w="100%">
-        {board.map((row, rowIndex) => {
-          return (
-            <HStack key={rowIndex} justifyContent="center" h="100%" w="100%">
-              {row.map((_, colIndex) => {
-                return (
-                  <Fragment key={`${rowIndex}, ${colIndex}, fragment`}>
-                    <GridItem
-                      rowIndex={rowIndex}
-                      colIndex={colIndex}
-                      isHoveringCol={colIndex === currentColHovering}
-                      playerOnGrid={board[rowIndex][colIndex]}
-                      currentPlayer={currentPlayer}
-                      setHover={handleSetCurrentColHovering}
-                      onClickHandler={gridClickHandler}
-                    />
-                  </Fragment>
-                );
-              })}
-            </HStack>
-          );
-        })}
+    <>
+      {showOverlay && (
+        <SelectionOverlay
+          closeOverlay={closeOverlay}
+          togglePlayer={toggleCurrentPlayer}
+          setPlayerOneColorYellow={setPlayerOneColorYellow}
+        />
+      )}
+
+      <VStack w="100%">
+        <WinModal
+          isOpen={isOpen}
+          onClose={handleOnCloseWinModal}
+          winner={winner}
+          stalemate={stalemate}
+        />
+        <HStack w="100%">
+          <Heading size="sm" p="0.5em" w="100%">
+            Connect Four
+          </Heading>
+          <Heading size="md" textAlign="end" p="0.5em" w="100%">
+            {currentPlayer}'s Turn
+          </Heading>
+        </HStack>
+        <VStack p="1em" h="100%" w="100%">
+          {board.map((row, rowIndex) => {
+            return (
+              <HStack key={rowIndex} justifyContent="center" h="100%" w="100%">
+                {row.map((_, colIndex) => {
+                  return (
+                    <Fragment key={`${rowIndex}, ${colIndex}, fragment`}>
+                      <GridItem
+                        rowIndex={rowIndex}
+                        colIndex={colIndex}
+                        isHoveringCol={colIndex === currentColHovering}
+                        playerOnGrid={board[rowIndex][colIndex]}
+                        currentPlayer={currentPlayer}
+                        playerOneColor={playerOneColor}
+                        setHover={handleSetCurrentColHovering}
+                        onClickHandler={gridClickHandler}
+                      />
+                    </Fragment>
+                  );
+                })}
+              </HStack>
+            );
+          })}
+        </VStack>
       </VStack>
-    </VStack>
+    </>
   );
 }
 

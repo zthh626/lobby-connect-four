@@ -8,6 +8,7 @@ interface GridItemProps {
   isHoveringCol: boolean;
   playerOnGrid: Player;
   currentPlayer: Player;
+  playerOneColor: string;
   setHover: (colIndex: number) => void;
   onClickHandler: (colIndex: number) => void;
 }
@@ -18,9 +19,15 @@ function GridItem({
   isHoveringCol,
   playerOnGrid,
   currentPlayer,
+  playerOneColor,
   setHover,
   onClickHandler,
 }: GridItemProps) {
+  const getPlayerTwoColor = () => {
+    if (playerOneColor === "red") return "yellow.300";
+    return "red";
+  };
+
   if (rowIndex === 0) {
     return (
       <Box
@@ -32,8 +39,8 @@ function GridItem({
         bg={
           isHoveringCol
             ? currentPlayer === "Player One"
-              ? "red"
-              : "yellow.300"
+              ? playerOneColor
+              : getPlayerTwoColor()
             : "none"
         }
         borderRadius="100px"
@@ -66,8 +73,8 @@ function GridItem({
         bg={
           playerOnGrid !== null
             ? playerOnGrid === "Player One"
-              ? "red"
-              : "yellow.300"
+              ? playerOneColor
+              : getPlayerTwoColor()
             : "none"
         }
         borderRadius="100px"
