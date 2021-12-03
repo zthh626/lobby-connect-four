@@ -6,7 +6,7 @@ import {
   HStack,
   useDisclosure,
   Box,
-  Input,
+  Text,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -52,7 +52,7 @@ const ConnectFourPage: NextPage = () => {
         </Center>
       )}
       <Box hidden={isPlaying} position="absolute" bottom="2em" right="2em">
-        Board Size
+        <Text fontWeight="bold">Board Size</Text>
         <NumberInput
           defaultValue={7}
           max={20}

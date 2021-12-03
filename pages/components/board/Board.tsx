@@ -61,86 +61,86 @@ function Board({ size }: BoardProps) {
     setPlayerOneColor("yellow.300");
   };
 
-  const checkForWinner = (player: Player): Player => {
-    var winner = null;
-
-    // horizontalCheck
-    for (let i = size; i > 0; i--) {
-      for (let j = 0; j < size - 3; j++) {
-        if (
-          board[i][j] === player &&
-          board[i][j + 1] === player &&
-          board[i][j + 2] === player &&
-          board[i][j + 3] === player
-        ) {
-          winner = player;
-          console.log("horizontal");
-        }
-      }
-    }
-
-    // verticalCheck
-    for (let i = size; i > 3; i--) {
-      for (let j = 0; j < size; j++) {
-        if (
-          board[i][j] === player &&
-          board[i - 1][j] === player &&
-          board[i - 2][j] === player &&
-          board[i - 3][j] === player
-        ) {
-          winner = player;
-          console.log("vertical");
-        }
-      }
-    }
-
-    // ascendingDiagonalCheck
-    for (let i = size - 3; i > 0; i--) {
-      for (let j = 3; j < size; j++) {
-        if (
-          board[i][j] === player &&
-          board[i + 1][j - 1] === player &&
-          board[i + 2][j - 2] === player &&
-          board[i + 3][j - 3] === player
-        ) {
-          winner = player;
-          console.log("ascending diag");
-        }
-      }
-    }
-
-    // descendingDiagonalCheck
-    for (let i = size - 3; i > 0; i--) {
-      for (let j = 0; j < size - 3; j++) {
-        if (
-          board[i][j] === player &&
-          board[i + 1][j + 1] === player &&
-          board[i + 2][j + 2] === player &&
-          board[i + 3][j + 3] === player
-        ) {
-          winner = player;
-          console.log("horizontal");
-        }
-      }
-    }
-
-    return winner;
-  };
-
-  const checkStalemate = (): Boolean => {
-    var isStalemate = true;
-    for (let i = size; i > 0; i--) {
-      for (let j = 0; j < size; j++) {
-        if (board[i][j] === null) {
-          isStalemate = false;
-        }
-      }
-    }
-
-    return isStalemate;
-  };
-
   useEffect(() => {
+    const checkForWinner = (player: Player): Player => {
+      var winner = null;
+
+      // horizontalCheck
+      for (let i = size; i > 0; i--) {
+        for (let j = 0; j < size - 3; j++) {
+          if (
+            board[i][j] === player &&
+            board[i][j + 1] === player &&
+            board[i][j + 2] === player &&
+            board[i][j + 3] === player
+          ) {
+            winner = player;
+            console.log("horizontal");
+          }
+        }
+      }
+
+      // verticalCheck
+      for (let i = size; i > 3; i--) {
+        for (let j = 0; j < size; j++) {
+          if (
+            board[i][j] === player &&
+            board[i - 1][j] === player &&
+            board[i - 2][j] === player &&
+            board[i - 3][j] === player
+          ) {
+            winner = player;
+            console.log("vertical");
+          }
+        }
+      }
+
+      // ascendingDiagonalCheck
+      for (let i = size - 3; i > 0; i--) {
+        for (let j = 3; j < size; j++) {
+          if (
+            board[i][j] === player &&
+            board[i + 1][j - 1] === player &&
+            board[i + 2][j - 2] === player &&
+            board[i + 3][j - 3] === player
+          ) {
+            winner = player;
+            console.log("ascending diag");
+          }
+        }
+      }
+
+      // descendingDiagonalCheck
+      for (let i = size - 3; i > 0; i--) {
+        for (let j = 0; j < size - 3; j++) {
+          if (
+            board[i][j] === player &&
+            board[i + 1][j + 1] === player &&
+            board[i + 2][j + 2] === player &&
+            board[i + 3][j + 3] === player
+          ) {
+            winner = player;
+            console.log("horizontal");
+          }
+        }
+      }
+
+      return winner;
+    };
+
+    const checkStalemate = (): Boolean => {
+      var isStalemate = true;
+      for (let i = size; i > 0; i--) {
+        for (let j = 0; j < size; j++) {
+          if (board[i][j] === null) {
+            isStalemate = false;
+          }
+        }
+      }
+
+      return isStalemate;
+    };
+
     const playerOneWin: Player = checkForWinner("Player One");
     const playerTwoWin: Player = checkForWinner("Player Two");
 
@@ -156,7 +156,7 @@ function Board({ size }: BoardProps) {
       setWinner("Player Two");
       onOpen();
     }
-  }, [board]);
+  }, [board, size, onOpen]);
 
   return (
     <>
@@ -180,7 +180,7 @@ function Board({ size }: BoardProps) {
             Connect Four
           </Heading>
           <Heading size="md" textAlign="end" p="0.5em" w="100%">
-            {currentPlayer}'s Turn
+            {currentPlayer}&apos;s Turn
           </Heading>
         </HStack>
         <VStack p="1em" h="100%" w="100%">
