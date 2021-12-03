@@ -9,29 +9,32 @@ import {
 import type { NextPage } from "next";
 import React, { useState } from "react";
 import Board from "./components/board/Board";
-import RulesModal from "./components/modals/rules/RulesModal";
+import RulesModal from "./components/modals/RulesModal";
 
 const ConnectFourPage: NextPage = () => {
   const [size, setSize] = useState(7);
   const [isPlaying, setIsPlaying] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const toggleIsPlaying = () => {
+    setIsPlaying((prev) => !prev);
+  };
+
   return (
     <Flex justifyContent="center" h="100vh">
       {isPlaying ? (
-        <Board size={size} />
+        <Board size={size} toggleIsPlaying={toggleIsPlaying} />
       ) : (
         <Center flexDir="column">
           <Heading p="1em ">Connect Four</Heading>
           <HStack>
             <>
               <Button onClick={onOpen}>Rules</Button>
-
               <RulesModal isOpen={isOpen} onClose={onClose} />
             </>
             <Button
               onClick={() => {
-                setIsPlaying((prev) => !prev);
+                toggleIsPlaying();
               }}
             >
               Start Game
