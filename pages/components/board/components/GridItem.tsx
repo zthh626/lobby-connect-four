@@ -36,7 +36,7 @@ function GridItem({
               : "yellow.300"
             : "none"
         }
-        borderRadius="40px"
+        borderRadius="100px"
       />
     );
   }
@@ -70,7 +70,7 @@ function GridItem({
               : "yellow.300"
             : "none"
         }
-        borderRadius="40px"
+        borderRadius="100px"
         h="100%"
         w="100%"
         key={`${rowIndex}, ${colIndex}, played`}

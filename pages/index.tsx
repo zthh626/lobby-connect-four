@@ -5,6 +5,13 @@ import {
   Button,
   HStack,
   useDisclosure,
+  Box,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import React, { useState } from "react";
@@ -23,7 +30,7 @@ const ConnectFourPage: NextPage = () => {
   return (
     <Flex justifyContent="center" h="100vh">
       {isPlaying ? (
-        <Board size={size} toggleIsPlaying={toggleIsPlaying} />
+        <Board size={size} />
       ) : (
         <Center flexDir="column">
           <Heading p="1em ">Connect Four</Heading>
@@ -33,6 +40,8 @@ const ConnectFourPage: NextPage = () => {
               <RulesModal isOpen={isOpen} onClose={onClose} />
             </>
             <Button
+              disabled={size > 20}
+              bg="green.400"
               onClick={() => {
                 toggleIsPlaying();
               }}
@@ -42,6 +51,23 @@ const ConnectFourPage: NextPage = () => {
           </HStack>
         </Center>
       )}
+      <Box hidden={isPlaying} position="absolute" bottom="2em" right="2em">
+        Board Size
+        <NumberInput
+          defaultValue={7}
+          max={20}
+          clampValueOnBlur={false}
+          onChange={(_: string, valueAsNumber: number) => {
+            setSize(valueAsNumber);
+          }}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+      </Box>
     </Flex>
   );
 };
