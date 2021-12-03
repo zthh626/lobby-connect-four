@@ -17,7 +17,7 @@ interface RulesModalProps {
 
 function RulesModal({ isOpen, onClose }: RulesModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Connect Four Rules</ModalHeader>

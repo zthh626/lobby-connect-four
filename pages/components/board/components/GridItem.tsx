@@ -1,4 +1,4 @@
-import { Box, Image } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import React from "react";
 import Player from "../../../types/Player";
 
@@ -8,7 +8,7 @@ interface GridItemProps {
   isHoveringCol: boolean;
   playerOnGrid: Player;
   currentPlayer: Player;
-  setHover: React.Dispatch<React.SetStateAction<number>>;
+  setHover: (colIndex: number) => void;
   onClickHandler: (colIndex: number) => void;
 }
 
@@ -28,7 +28,7 @@ function GridItem({
         css={{
           aspectRatio: "1",
         }}
-        key={`${rowIndex}, ${colIndex}`}
+        key={`${rowIndex}, ${colIndex}, indicator`}
         bg={
           isHoveringCol
             ? currentPlayer === "Player One"
@@ -73,6 +73,7 @@ function GridItem({
         borderRadius="40px"
         h="100%"
         w="100%"
+        key={`${rowIndex}, ${colIndex}, played`}
       />
     </Box>
   );
