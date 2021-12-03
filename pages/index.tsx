@@ -30,7 +30,7 @@ const ConnectFourPage: NextPage = () => {
   return (
     <Flex justifyContent="center" h="100vh">
       {isPlaying ? (
-        <Board size={size} />
+        <Board size={size} toggleIsPlaying={toggleIsPlaying} />
       ) : (
         <Center flexDir="column">
           <Heading p="1em ">Connect Four</Heading>

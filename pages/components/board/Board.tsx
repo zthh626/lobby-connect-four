@@ -14,9 +14,10 @@ import GridItem from "./components/GridItem";
 
 interface BoardProps {
   size: number;
+  toggleIsPlaying: () => void;
 }
 
-function Board({ size }: BoardProps) {
+function Board({ size, toggleIsPlaying }: BoardProps) {
   const [currentPlayer, setCurrentPlayer] = useState<Player>("Player One");
   const [playerOneColor, setPlayerOneColor] = useState<string>("red");
   const [board, setBoard] = useState<Player[][]>(
@@ -195,7 +196,15 @@ function Board({ size }: BoardProps) {
           stalemate={stalemate}
         />
         <HStack w="100%">
-          <Heading size="sm" p="0.5em" w="100%">
+          <Heading
+            _hover={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={() => {
+              toggleIsPlaying();
+            }}
+            size="sm"
+            p="0.5em"
+            w="100%"
+          >
             Connect Four
           </Heading>
           <Heading size="md" textAlign="end" p="0.5em" w="100%">
