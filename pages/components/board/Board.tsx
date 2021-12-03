@@ -1,5 +1,12 @@
-import { VStack, Heading, HStack, useDisclosure } from "@chakra-ui/react";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import {
+  VStack,
+  Heading,
+  HStack,
+  useDisclosure,
+  Box,
+  Text,
+} from "@chakra-ui/react";
+import React, { Fragment, useEffect, useState } from "react";
 import Player from "../../types/Player";
 import WinModal from "../modals/WinModal";
 import SelectionOverlay from "../Overlays/SelectionOverlay";
@@ -20,6 +27,9 @@ function Board({ size }: BoardProps) {
   const [stalemate, setStalemate] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [showOverlay, setShowOverlay] = useState(true);
+
+  const [playerOneWins, setPlayerOneWins] = useState<number>(0);
+  const [playerTwoWins, setPlayerTwoWins] = useState<number>(0);
 
   const toggleCurrentPlayer = () => {
     setCurrentPlayer((prev) => {
@@ -151,21 +161,30 @@ function Board({ size }: BoardProps) {
 
     if (playerOneWin) {
       setWinner("Player One");
+      setPlayerOneWins((prev) => prev + 1);
       onOpen();
     } else if (playerTwoWin) {
       setWinner("Player Two");
+      setPlayerTwoWins((prev) => prev + 1);
       onOpen();
     }
   }, [board, size, onOpen]);
 
   return (
     <>
-      {showOverlay && (
+      {(showOverlay && (
         <SelectionOverlay
           closeOverlay={closeOverlay}
           togglePlayer={toggleCurrentPlayer}
           setPlayerOneColorYellow={setPlayerOneColorYellow}
         />
+      )) || (
+        <Box position="absolute" bottom="1em" left="2em">
+          <VStack>
+            <Text>Player One wins: {playerOneWins}</Text>
+            <Text>Player Two wins: {playerTwoWins}</Text>
+          </VStack>
+        </Box>
       )}
 
       <VStack w="100%">
